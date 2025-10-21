@@ -14,7 +14,6 @@ from planexe.plan.find_plan_prompt import find_plan_prompt
 from planexe.llm_factory import get_llm
 
 llm = get_llm("gemini-paid-flash-2.0")
-# llm = get_llm("gemini-paid-flash-2.0")
 
 plan_prompt = find_plan_prompt("4dc34d55-0d0d-4e9d-92f4-23765f49dd29")
 

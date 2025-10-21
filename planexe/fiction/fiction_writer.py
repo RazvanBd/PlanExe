@@ -120,10 +120,6 @@ if __name__ == "__main__":
     query = prompt_item.prompt
 
     llm = get_llm("gemini-paid-flash-2.0") # works
-    # llm = get_llm("gemini-paid-flash-2.0") # works
-    # llm = get_llm("ollama-qwen")
-    # llm = get_llm("ollama-phi")
-    # llm = get_llm("deepseek-chat")
 
     print(f"System: {system_prompt}")
     print(f"\n\nQuery: {query}")
