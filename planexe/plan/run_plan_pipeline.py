@@ -3567,6 +3567,63 @@ class PremortemTask(PlanTask):
         markdown_path = self.output()['markdown'].path
         premortem.save_markdown(markdown_path)
 
+
+class TechnicalTasksTask(PlanTask):
+    """
+    Generate technical task list for developers.
+    """
+    def output(self):
+        return {
+            'raw': self.local_target(FilenameEnum.TECHNICAL_TASKS_RAW),
+            'markdown': self.local_target(FilenameEnum.TECHNICAL_TASKS_MARKDOWN)
+        }
+    
+    def requires(self):
+        return {
+            'project_plan': self.clone(ProjectPlanTask),
+            'wbs_project123': self.clone(WBSProjectLevel1AndLevel2AndLevel3Task)
+        }
+    
+    def run_with_llm(self, llm: LLM) -> None:
+        logger.info("Generating technical task list...")
+
+        from planexe.technical_tasks.generate_technical_tasks import GenerateTechnicalTasks
+
+        # Read inputs from required tasks.
+        with self.input()['project_plan']['raw'].open("r") as f:
+            project_plan_dict = json.load(f)
+            # Remove metadata and prompts to keep only the plan data
+            if 'metadata' in project_plan_dict:
+                del project_plan_dict['metadata']
+            if 'user_prompt' in project_plan_dict:
+                del project_plan_dict['user_prompt']
+            if 'system_prompt' in project_plan_dict:
+                del project_plan_dict['system_prompt']
+        
+        # Optionally include WBS structure
+        wbs_structure = None
+        try:
+            with self.input()['wbs_project123']['full'].open("r") as f:
+                wbs_structure = json.load(f)
+        except Exception as e:
+            logger.warning(f"Could not load WBS structure: {e}")
+
+        # Generate technical tasks
+        technical_tasks = GenerateTechnicalTasks.execute(
+            llm=llm,
+            project_plan=project_plan_dict,
+            wbs_structure=wbs_structure
+        )
+
+        # Save the results.
+        json_path = self.output()['raw'].path
+        technical_tasks.save_raw(json_path)
+        markdown_path = self.output()['markdown'].path
+        technical_tasks.save_markdown(markdown_path)
+
+        logger.info(f"Generated {len(technical_tasks.task_list.tasks)} technical tasks")
+
+
 class ReportTask(PlanTask):
     """
     Generate a report html document.
@@ -3597,7 +3654,8 @@ class ReportTask(PlanTask):
             'executive_summary': self.clone(ExecutiveSummaryTask),
             'create_schedule': self.clone(CreateScheduleTask),
             'questions_and_answers': self.clone(QuestionsAndAnswersTask),
-            'premortem': self.clone(PremortemTask)
+            'premortem': self.clone(PremortemTask),
+            'technical_tasks': self.clone(TechnicalTasksTask)
         }
     
     def run_inner(self):
@@ -3625,6 +3683,7 @@ class ReportTask(PlanTask):
         rg.append_markdown('Review Plan', self.input()['review_plan']['markdown'].path)
         rg.append_html('Questions & Answers', self.input()['questions_and_answers']['html'].path)
         rg.append_markdown_with_tables('Premortem', self.input()['premortem']['markdown'].path)
+        rg.append_markdown('Technical Task List', self.input()['technical_tasks']['markdown'].path)
         rg.append_initial_prompt_vetted(
             document_title='Initial Prompt Vetted', 
             initial_prompt_file_path=self.input()['setup'].path, 
@@ -3696,6 +3755,7 @@ class FullPlanPipeline(PlanTask):
             'create_schedule': self.clone(CreateScheduleTask),
             'questions_and_answers': self.clone(QuestionsAndAnswersTask),
             'premortem': self.clone(PremortemTask),
+            'technical_tasks': self.clone(TechnicalTasksTask),
             'report': self.clone(ReportTask),
         }
 
