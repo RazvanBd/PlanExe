@@ -42,11 +42,9 @@ source venv/bin/activate
 
 # Configuration
 
-**Config A:** Run a model in the cloud using a paid provider. Follow the instructions in [OpenRouter](extra/openrouter.md), [Gemini](extra/gemini.md), or [Mistral](extra/mistral.md).
+**Config:** Run a model in the cloud using a paid provider. Follow the instructions in [Gemini](extra/gemini.md).
 
-**Config B:** Run models locally on a high-end computer. Follow the instructions for either [Ollama](extra/ollama.md) or [LM Studio](extra/lm_studio.md).
-
-Recommendation: I recommend **Config A** as it offers the most straightforward path to getting PlanExe working reliably.
+Recommendation: I recommend using **Gemini** as it offers the most straightforward path to getting PlanExe working reliably.
 
 # Usage
 
