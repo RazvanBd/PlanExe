@@ -3,30 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo 2</title>
+    <title>PlanExe Demo - Create Your Plan</title>
     <style>
         body {
             margin: 0;
             padding: 20px;
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            min-height: 100vh;
         }
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
         h1 {
-            color: #333;
-            margin-bottom: 20px;
+            color: #2c3e50;
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #667eea;
+            text-decoration: none;
+            background: white;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(-5px);
         }
         .iframe-container {
             width: 100%;
-            height: 80vh;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            height: 85vh;
+            border: none;
+            border-radius: 12px;
             overflow: hidden;
             background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             display: none; /* Initially hidden */
         }
         iframe {
@@ -36,120 +60,279 @@
         }
         .input-container {
             background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
         }
         .example-prompt-buttons {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
         }
         .example-prompt-buttons button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            background-color: #f0f0f0;
+            padding: 12px 24px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: white;
             color: #333;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             font-weight: 500;
+            font-size: 15px;
         }
         .example-prompt-buttons button:hover {
-            background-color: #e0e0e0;
-            transform: translateY(-1px);
+            background-color: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+        .example-prompt-buttons button.active {
+            background-color: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .textarea-wrapper {
+            position: relative;
+            margin-bottom: 20px;
         }
         #prompt {
             width: 100%;
-            height: 200px;
-            margin-bottom: 20px;
+            min-height: 200px;
             padding: 15px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 16px;
-            line-height: 1.5;
+            line-height: 1.6;
             resize: vertical;
-            transition: border-color 0.2s ease;
+            transition: all 0.3s ease;
             box-sizing: border-box;
+            font-family: inherit;
         }
         #prompt:focus {
             outline: none;
-            border-color: #0066cc;
-            box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        .char-counter {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 13px;
+            color: #999;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px 8px;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+        .char-counter.warning {
+            color: #e67e22;
+        }
+        .char-counter.error {
+            color: #e74c3c;
+        }
+        .submit-section {
+            display: flex;
+            gap: 15px;
+            align-items: center;
         }
         #submit-button {
-            display: block;
-            width: 100%;
-            padding: 15px 30px;
-            background-color: #0066cc;
+            flex: 1;
+            padding: 18px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 18px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
-        #submit-button:hover {
-            background-color: #0052a3;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        #submit-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
-        #submit-button:active {
+        #submit-button:active:not(:disabled) {
             transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        #submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .info-box p {
+            margin: 0;
+            color: #555;
+            line-height: 1.6;
+        }
+        .info-box strong {
+            color: #667eea;
         }
         .userid-container {
             text-align: center;
             margin-top: 25px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
             font-family: monospace;
-            font-size: 16px;
+            font-size: 14px;
             color: #666;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
         .userid-container span {
             font-weight: bold;
+            color: #667eea;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            .example-prompt-buttons {
+                flex-direction: column;
+            }
+            .example-prompt-buttons button {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Demo 2</h1>
-        <a href="/developer" style="display: inline-block; margin-bottom: 20px; color: #0066cc; text-decoration: none;">← Back to Developer</a>
+        <div class="header">
+            <h1>📝 Create Your Plan</h1>
+            <a href="/" class="back-link">← Back to Home</a>
+        </div>
         <div class="input-container">
+            <div class="info-box">
+                <p><strong>💡 Tip:</strong> Describe your business idea or project in detail. The more specific you are, the better your plan will be. Plan generation takes approximately 10 minutes.</p>
+            </div>
+            
+            <div class="section-header">
+                <div class="section-title">Choose an Example or Write Your Own</div>
+            </div>
             <div class="example-prompt-buttons">
                 <!-- Buttons will be dynamically generated here -->
             </div>
-            <textarea id="prompt"></textarea>
-            <button id="submit-button">Submit</button>
+            
+            <div class="textarea-wrapper">
+                <textarea id="prompt" placeholder="Describe your business idea or project here... For example: 'I want to start a coffee shop in downtown Seattle that focuses on sustainable, locally-roasted beans and a coworking space for remote workers.'"></textarea>
+                <div class="char-counter" id="charCounter">0 characters</div>
+            </div>
+            
+            <div class="submit-section">
+                <button id="submit-button">Generate Plan</button>
+            </div>
         </div>
         <div class="iframe-container">
             <iframe src="" title="Run Page"></iframe>
         </div>
-        <div class="userid-container">User ID: <span>{{ user_id }}</span></div>
+        <div class="userid-container">Session ID: <span>{{ user_id }}</span></div>
     </div>
 
     <script>
         const prompts = JSON.parse('{{ prompts|tojson|safe }}');
+        const promptTextarea = document.getElementById('prompt');
+        const charCounter = document.getElementById('charCounter');
+        const submitButton = document.getElementById('submit-button');
+        let activeExampleIndex = 0;
+
+        // Update character counter
+        function updateCharCounter() {
+            const length = promptTextarea.value.length;
+            charCounter.textContent = `${length} character${length !== 1 ? 's' : ''}`;
+            
+            // Update color based on length
+            if (length > 5000) {
+                charCounter.classList.add('error');
+                charCounter.classList.remove('warning');
+                submitButton.disabled = true;
+            } else if (length > 3000) {
+                charCounter.classList.add('warning');
+                charCounter.classList.remove('error');
+                submitButton.disabled = false;
+            } else {
+                charCounter.classList.remove('warning', 'error');
+                submitButton.disabled = length === 0;
+            }
+        }
 
         // Set default prompt on page load
         window.onload = function() {
-            document.getElementById('prompt').value = prompts[0];
+            promptTextarea.value = prompts[0];
+            updateCharCounter();
             
-            // Dynamically create example buttons
+            // Dynamically create example buttons with better descriptions
             const buttonContainer = document.querySelector('.example-prompt-buttons');
+            const exampleLabels = [
+                'Manufacturing Business',
+                'Service Business',
+                'Technology Project'
+            ];
+            
             prompts.forEach((prompt, index) => {
                 const button = document.createElement('button');
                 button.id = `example-${index + 1}-button`;
-                button.textContent = `Example ${index + 1}`;
+                button.textContent = `📄 ${exampleLabels[index] || 'Example ' + (index + 1)}`;
+                if (index === 0) button.classList.add('active');
+                
                 button.addEventListener('click', function() {
-                    document.getElementById('prompt').value = prompts[index];
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.example-prompt-buttons button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    promptTextarea.value = prompts[index];
+                    activeExampleIndex = index;
+                    updateCharCounter();
+                    promptTextarea.focus();
                 });
                 buttonContainer.appendChild(button);
             });
         };
 
-        document.getElementById('submit-button').addEventListener('click', function() {
-            const prompt = document.getElementById('prompt').value;
+        // Listen for textarea changes
+        promptTextarea.addEventListener('input', updateCharCounter);
+
+        // Submit button handler
+        submitButton.addEventListener('click', function() {
+            const prompt = promptTextarea.value.trim();
+            
+            if (!prompt) {
+                alert('Please enter a description for your plan.');
+                return;
+            }
+            
+            if (prompt.length > 5000) {
+                alert('Your prompt is too long. Please keep it under 5000 characters.');
+                return;
+            }
+            
             const iframeContainer = document.querySelector('.iframe-container');
             const inputContainer = document.querySelector('.input-container');
             const iframe = iframeContainer.querySelector('iframe');
@@ -160,6 +343,14 @@
             // Show the iframe container and hide the input container
             iframeContainer.style.display = 'block';
             inputContainer.style.display = 'none';
+        });
+
+        // Allow Enter key to submit (with Shift+Enter for new line)
+        promptTextarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                e.preventDefault();
+                submitButton.click();
+            }
         });
     </script>
 </body>

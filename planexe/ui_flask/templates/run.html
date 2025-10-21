@@ -3,91 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server Progress</title>
+    <title>Generating Your Plan - PlanExe</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         .progress-container {
             text-align: center;
-            padding: 2rem;
+            padding: 3rem;
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 90%;
         }
-        .progress-bar {
+        .status-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .status-icon.completed {
+            animation: none;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        .info-text {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        .progress-bar-container {
             width: 100%;
-            height: 20px;
+            height: 30px;
             background-color: #f0f0f0;
-            border-radius: 10px;
-            margin: 1rem 0;
+            border-radius: 15px;
+            margin: 1.5rem 0;
             overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
         .progress-bar-fill {
             height: 100%;
-            background-color: #4CAF50;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
             width: 0%;
-            transition: width 0.3s ease-in-out;
+            transition: width 0.5s ease-in-out;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .progress-percentage {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin: 1rem 0;
         }
         .progress-message {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #333;
+            font-size: 1.1rem;
+            color: #555;
+            min-height: 30px;
+            margin: 1rem 0;
         }
-        .progress-label {
-            font-size: 1.2rem;
-            color: #666;
-            margin-top: 1rem;
+        .time-info {
+            display: flex;
+            justify-content: space-around;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
         }
-        .parameters {
-            margin-bottom: 1rem;
+        .time-item {
+            text-align: center;
         }
-        .parameter {
-            margin-bottom: 0.5rem;
+        .time-label {
+            font-size: 0.85rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .time-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #667eea;
+            margin-top: 0.3rem;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+        .status-badge.running {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        .status-badge.completed {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .status-badge.failed {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .tips {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+        .tips h4 {
+            margin: 0 0 0.5rem 0;
+            color: #856404;
+        }
+        .tips ul {
+            margin: 0;
+            padding-left: 1.5rem;
+            color: #856404;
+        }
+        .tips li {
+            margin: 0.3rem 0;
+        }
+        @media (max-width: 768px) {
+            .progress-container {
+                padding: 2rem 1.5rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            .time-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="progress-container">
-        <h2>Don't close this page. The plan will take approx 10 minutes to generate.</h2>
-        <div class="progress-bar" id="progress-bar"></div>
-        <div class="progress-message" id="progress-message"></div>
-        <div class="progress-label">Server Progress</div>
+        <div class="status-icon" id="statusIcon">⚙️</div>
+        <h2 id="mainTitle">Generating Your Plan</h2>
+        <div class="info-text">
+            Please keep this page open while we create your comprehensive plan.
+            This process typically takes about 10 minutes.
+        </div>
+        
+        <div class="status-badge running" id="statusBadge">Processing</div>
+        
+        <div class="progress-bar-container" id="progress-bar">
+            <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+        
+        <div class="progress-percentage" id="progressPercentage">0%</div>
+        <div class="progress-message" id="progressMessage">Initializing...</div>
+        
+        <div class="time-info">
+            <div class="time-item">
+                <div class="time-label">Elapsed</div>
+                <div class="time-value" id="elapsedTime">0:00</div>
+            </div>
+            <div class="time-item">
+                <div class="time-label">Est. Remaining</div>
+                <div class="time-value" id="remainingTime">~10:00</div>
+            </div>
+        </div>
+        
+        <div class="tips">
+            <h4>💡 What's being generated:</h4>
+            <ul>
+                <li>Comprehensive business analysis</li>
+                <li>SWOT analysis and risk assessment</li>
+                <li>Cost estimates and financial projections</li>
+                <li>Timeline and milestone planning</li>
+                <li>Detailed implementation roadmap</li>
+            </ul>
+        </div>
     </div>
 
     <script>
-        const progressMessageElement = document.getElementById('progress-message');
-        const progressBarElement = document.getElementById('progress-bar');
-        const progressBarFill = document.createElement('div');
-        progressBarFill.className = 'progress-bar-fill';
-        progressBarElement.appendChild(progressBarFill);
+        const progressPercentageElement = document.getElementById('progressPercentage');
+        const progressMessageElement = document.getElementById('progressMessage');
+        const progressBarFill = document.getElementById('progressBarFill');
+        const statusBadge = document.getElementById('statusBadge');
+        const statusIcon = document.getElementById('statusIcon');
+        const mainTitle = document.getElementById('mainTitle');
+        const elapsedTimeElement = document.getElementById('elapsedTime');
+        const remainingTimeElement = document.getElementById('remainingTime');
+        
+        const startTime = Date.now();
+        const estimatedDuration = 10 * 60 * 1000; // 10 minutes in milliseconds
+        
+        // Update elapsed time every second
+        setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            const minutes = Math.floor(elapsed / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            elapsedTimeElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }, 1000);
+        
+        // Update estimated remaining time based on progress
+        function updateRemainingTime(percentage) {
+            if (percentage > 0 && percentage < 100) {
+                const elapsed = Date.now() - startTime;
+                const totalEstimated = (elapsed / percentage) * 100;
+                const remaining = totalEstimated - elapsed;
+                const minutes = Math.floor(remaining / 60000);
+                const seconds = Math.floor((remaining % 60000) / 1000);
+                remainingTimeElement.textContent = `~${minutes}:${seconds.toString().padStart(2, '0')}`;
+            } else if (percentage === 100) {
+                remainingTimeElement.textContent = '0:00';
+            }
+        }
+        
         const eventSource = new EventSource(`/progress?user_id={{ user_id }}`);
 
         eventSource.onmessage = function(event) {
             const data = JSON.parse(event.data);
-            const is_completed = data.status == "completed";
-            progressMessageElement.textContent = data.progress_message;
+            const isCompleted = data.status === "completed";
+            const isFailed = data.status === "failed";
             
-            // Update progress bar
+            progressMessageElement.textContent = data.progress_message || 'Processing...';
+            
+            // Update progress bar and percentage
             if (data.progress_percentage !== undefined) {
-                progressBarFill.style.width = `${data.progress_percentage}%`;
+                const percentage = Math.min(100, Math.max(0, data.progress_percentage));
+                progressBarFill.style.width = `${percentage}%`;
+                progressPercentageElement.textContent = `${percentage}%`;
+                updateRemainingTime(percentage);
             }
             
-            if (is_completed) {
-                // when the operation has completed redirect to the viewplan page
-                window.location.href = `/viewplan?user_id={{ user_id }}`;
+            // Update status badge and icon
+            if (isCompleted) {
+                statusBadge.textContent = 'Completed';
+                statusBadge.className = 'status-badge completed';
+                statusIcon.textContent = '✅';
+                statusIcon.className = 'status-icon completed';
+                mainTitle.textContent = 'Plan Generated Successfully!';
+                
+                // Redirect to viewplan page
+                setTimeout(() => {
+                    window.location.href = `/viewplan?user_id={{ user_id }}`;
+                }, 1000);
+            } else if (isFailed) {
+                statusBadge.textContent = 'Failed';
+                statusBadge.className = 'status-badge failed';
+                statusIcon.textContent = '❌';
+                statusIcon.className = 'status-icon completed';
+                mainTitle.textContent = 'Plan Generation Failed';
+                remainingTimeElement.textContent = 'N/A';
+            } else if (data.status === "running") {
+                statusBadge.textContent = 'Processing';
+                statusBadge.className = 'status-badge running';
+                statusIcon.textContent = '⚙️';
             }
         };
 
         eventSource.onerror = function(event) {
             console.error('EventSource failed', event);
             eventSource.close();
+            statusBadge.textContent = 'Connection Lost';
+            statusBadge.className = 'status-badge failed';
+            statusIcon.textContent = '⚠️';
+            mainTitle.textContent = 'Connection Error';
         };
     </script>
 </body>
