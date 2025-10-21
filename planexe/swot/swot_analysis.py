@@ -181,7 +181,7 @@ if __name__ == "__main__":
         raise ValueError("Prompt item not found.")
     query = prompt_item.prompt
 
-    llm = get_llm("ollama-llama3.1")
+    llm = get_llm("gemini-paid-flash-2.0")
 
     print(f"Query: {query}")
     result = SWOTAnalysis.execute(llm=llm, query=query, identify_purpose_dict=None)

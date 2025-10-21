@@ -413,8 +413,8 @@ if __name__ == "__main__":
 
     plan_prompt = find_plan_prompt("5c4b4fee-267a-409b-842f-4833d86aa215")
 
-    llm = get_llm("ollama-llama3.1")
-    # llm = get_llm("openrouter-paid-gemini-2.0-flash-001")
+    llm = get_llm("gemini-paid-flash-2.0")
+    # llm = get_llm("gemini-paid-flash-2.0")
 
     path = os.path.join(os.path.dirname(__file__), 'test_data', "eu_prep_identified_documents_to_create.json")
     with open(path, 'r', encoding='utf-8') as f:

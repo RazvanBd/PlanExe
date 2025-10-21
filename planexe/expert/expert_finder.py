@@ -329,9 +329,9 @@ if __name__ == "__main__":
 
     # Create LLMExecutor with fallback models
     llm_models = LLMModelFromName.from_names([
-        # "openrouter-paid-gemini-2.0-flash-001",
+        # "gemini-paid-flash-2.0",
         "ollama-llama3.1", 
-        # "openrouter-paid-qwen3-30b-a3b"
+        # "gemini-paid-pro-2.0"
     ])
     llm_executor = LLMExecutor(llm_models=llm_models)
 

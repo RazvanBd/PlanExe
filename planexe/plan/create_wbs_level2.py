@@ -156,7 +156,6 @@ WBS Level 1:
         return d
     
 if __name__ == "__main__":
-    from llama_index.llms.ollama import Ollama
 
     # TODO: Eliminate hardcoded paths
     path = '/Users/neoneye/Desktop/planexe_data/plan.json'

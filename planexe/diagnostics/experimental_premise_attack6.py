@@ -552,7 +552,7 @@ if __name__ == "__main__":
     import random
     import itertools
 
-    llm = get_llm("ollama-llama3.1")
+    llm = get_llm("gemini-paid-flash-2.0")
 
     user_prompt_ids: list[str] = [
         "28289ed9-0c80-41cf-9d26-714bffe4e498",

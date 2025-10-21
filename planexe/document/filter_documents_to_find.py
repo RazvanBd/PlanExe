@@ -399,8 +399,8 @@ if __name__ == "__main__":
         ]
     )
 
-    llm = get_llm("ollama-llama3.1")
-    # llm = get_llm("openrouter-paid-gemini-2.0-flash-001")
+    llm = get_llm("gemini-paid-flash-2.0")
+    # llm = get_llm("gemini-paid-flash-2.0")
 
     path = os.path.join(os.path.dirname(__file__), 'test_data', "eu_prep_identified_documents_to_find.json")
     with open(path, 'r', encoding='utf-8') as f:

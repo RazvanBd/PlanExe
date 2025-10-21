@@ -520,7 +520,7 @@ if __name__ == "__main__":
     from planexe.llm_factory import get_llm
     from planexe.plan.find_plan_prompt import find_plan_prompt
 
-    llm = get_llm("ollama-llama3.1")
+    llm = get_llm("gemini-paid-flash-2.0")
     plan_prompt = find_plan_prompt("5d0dd39d-0047-4473-8096-ea5eac473a57")
 
     print(f"Query:\n{plan_prompt}\n\n")

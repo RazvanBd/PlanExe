@@ -156,7 +156,7 @@ class EnrichTeamMembersWithBackgroundStory:
 if __name__ == "__main__":
     from planexe.llm_factory import get_llm
 
-    llm = get_llm("ollama-llama3.1")
+    llm = get_llm("gemini-paid-flash-2.0")
     # llm = get_llm("deepseek-chat")
 
     job_description = "Investigate outbreak of a deadly new disease in the jungle."

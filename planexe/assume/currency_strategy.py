@@ -333,7 +333,7 @@ if __name__ == "__main__":
     all_documents_string = concat_files_into_string(base_path)
     print(all_documents_string)
 
-    llm = get_llm("ollama-llama3.1")
+    llm = get_llm("gemini-paid-flash-2.0")
 
     currency_strategy = CurrencyStrategy.execute(llm, all_documents_string)
     json_response = currency_strategy.to_dict(include_system_prompt=False, include_user_prompt=False)

@@ -67,8 +67,8 @@ SYSTEM_PROMPT = """
 Fill out the details as best you can.
 """
 
-llm = get_llm("ollama-llama3.1")
-# llm = get_llm("openrouter-paid-gemini-2.0-flash-001")
+llm = get_llm("gemini-paid-flash-2.0")
+# llm = get_llm("gemini-paid-flash-2.0")
 # llm = get_llm("deepseek-chat")
 # llm = get_llm("together-llama3.3")
 # llm = get_llm("groq-gemma2")

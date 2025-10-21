@@ -17,7 +17,6 @@ PROMPT> mkvirtualenv mypingenv --python=/usr/bin/python3.13
 (mypingenv) PROMPT> python -m planexe.proof_of_concepts.run_ping_medium
 (mypingenv) PROMPT> rm -rf ~/.virtualenvs/mypingenv
 """
-from llama_index.llms.openrouter import OpenRouter
 from llama_index.core.llms import ChatMessage, MessageRole
 import os
 
