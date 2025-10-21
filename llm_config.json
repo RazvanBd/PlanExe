@@ -1,4 +1,26 @@
 {
+    "gemini-paid-flash-2.0": {
+        "comment": "This is fast and paid. Check the pricing before use. Created Feb 25, 2025. 1,048,576 context. Starting at $0.075/M input tokens. Starting at $0.30/M output tokens.",
+        "priority": 1,
+        "class": "Gemini",
+        "arguments": {
+            "model": "models/gemini-2.0-flash-exp",
+            "api_key": "${GEMINI_API_KEY}",
+            "temperature": 0.1,
+            "max_tokens": 8192
+        }
+    },
+    "gemini-paid-pro-2.0": {
+        "comment": "This is paid. Check the pricing before use. Created Feb 25, 2025. 2,097,152 context. Starting at $1.25/M input tokens. Starting at $5.00/M output tokens.",
+        "priority": 4,
+        "class": "Gemini",
+        "arguments": {
+            "model": "models/gemini-2.0-flash-thinking-exp-01-21",
+            "api_key": "${GEMINI_API_KEY}",
+            "temperature": 0.1,
+            "max_tokens": 8192
+        }
+    },
     "openrouter-paid-openai-gpt-oss-20b": {
         "comment": "This is very fast. It's paid, so check the pricing before use. Created August 5, 2025. 131,072 context. $0.05/M input tokens. $0.20/M output tokens. This is a reasoning model, and uses more tokens than LLMs.",
         "class": "OpenRouter",
