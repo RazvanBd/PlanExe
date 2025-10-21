@@ -1,45 +1,144 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Ping LLMs</title>
+    <title>LLM Connectivity Test - PlanExe</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #667eea;
+            text-decoration: none;
+            background: white;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(-5px);
+        }
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .summary-card .label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+        .summary-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+        .summary-card.success .value {
+            color: #2ecc71;
+        }
+        .summary-card.error .value {
+            color: #e74c3c;
+        }
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
         table {
             border-collapse: collapse;
             width: 100%;
-            margin-top: 20px;
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
         th {
-            background-color: #f2f2f2;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
         }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover {
+            background-color: #f8f9fa;
         }
         .status-success {
-            color: green;
+            color: #2ecc71;
+            font-weight: 600;
         }
         .status-error {
-            color: red;
+            color: #e74c3c;
+            font-weight: 600;
         }
         .status-pinging {
-            color: #666;
+            color: #3498db;
             font-style: italic;
-        }
-        .back-link {
-            margin-bottom: 20px;
-            display: inline-block;
         }
         .loading {
-            color: #666;
-            font-style: italic;
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 1.1rem;
+        }
+        .response-cell {
+            max-width: 400px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .response-time {
+            font-weight: 600;
+        }
+        .response-time.fast {
+            color: #2ecc71;
+        }
+        .response-time.medium {
+            color: #f39c12;
+        }
+        .response-time.slow {
+            color: #e74c3c;
         }
         @keyframes ellipsis {
             0% { content: '.'; }
@@ -55,50 +154,103 @@
             text-align: left;
         }
         .server-status {
-            font-size: 0.8em;
-            font-weight: normal;
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin-left: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
             display: inline-block;
+            margin-left: 15px;
         }
         .server-status.working {
-            background-color: #2196F3;
-            color: white;
+            background-color: #e3f2fd;
+            color: #1976d2;
         }
         .server-status.done {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #e8f5e9;
+            color: #2e7d32;
         }
         .server-status.error {
-            background-color: #f44336;
-            color: white;
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+            table {
+                font-size: 0.9rem;
+            }
+            th, td {
+                padding: 12px 8px;
+            }
         }
     </style>
 </head>
 <body>
-    <a href="/developer" class="back-link">← Back to Developer Page</a>
-    <h1>LLM Ping Results <span id="serverStatus" class="server-status working">Working...</span></h1>
-    <table>
-        <thead>
-            <tr>
-                <th>LLM Name</th>
-                <th>Status</th>
-                <th>Response Time</th>
-                <th>Response</th>
-            </tr>
-        </thead>
-        <tbody id="results">
-            <tr>
-                <td colspan="4" class="loading">Loading results...</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="container">
+        <div class="header">
+            <h1>🔌 LLM Connectivity Test <span id="serverStatus" class="server-status working">Testing...</span></h1>
+            <a href="/developer" class="back-link">← Back to Developer Tools</a>
+        </div>
+
+        <div class="summary-cards">
+            <div class="summary-card">
+                <div class="label">Total Models</div>
+                <div class="value" id="totalModels">-</div>
+            </div>
+            <div class="summary-card success">
+                <div class="label">Successful</div>
+                <div class="value" id="successCount">-</div>
+            </div>
+            <div class="summary-card error">
+                <div class="label">Failed</div>
+                <div class="value" id="errorCount">-</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Avg Response Time</div>
+                <div class="value" id="avgResponseTime">-</div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>LLM Name</th>
+                        <th>Status</th>
+                        <th>Response Time</th>
+                        <th>Response</th>
+                    </tr>
+                </thead>
+                <tbody id="results">
+                    <tr>
+                        <td colspan="4" class="loading">🔄 Connecting to models...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <script>
         const resultsTable = document.getElementById('results');
         const serverStatus = document.getElementById('serverStatus');
+        const totalModelsEl = document.getElementById('totalModels');
+        const successCountEl = document.getElementById('successCount');
+        const errorCountEl = document.getElementById('errorCount');
+        const avgResponseTimeEl = document.getElementById('avgResponseTime');
+        
         const results = new Map();
+        let successCount = 0;
+        let errorCount = 0;
+        let totalResponseTime = 0;
 
         const eventSource = new EventSource('/ping/stream');
         
@@ -107,21 +259,32 @@
             
             if (result.name === 'server') {
                 if (result.status === 'done') {
-                    serverStatus.textContent = 'Done';
+                    serverStatus.textContent = 'Complete ✓';
                     serverStatus.className = 'server-status done';
                     eventSource.close();
+                    updateSummary();
                 }
                 return;
             }
             
             results.set(result.name, result);
+            
+            // Update counters
+            if (result.status === 'success') {
+                successCount++;
+                totalResponseTime += result.response_time;
+            } else if (result.status === 'error') {
+                errorCount++;
+            }
+            
             updateTable();
+            updateSummary();
         };
 
         eventSource.onerror = function() {
             eventSource.close();
             if (results.size === 0) {
-                resultsTable.innerHTML = '<tr><td colspan="4" class="status-error">Error connecting to server</td></tr>';
+                resultsTable.innerHTML = '<tr><td colspan="4" class="status-error" style="text-align: center; padding: 40px;">❌ Error connecting to server</td></tr>';
             }
             serverStatus.textContent = 'Error';
             serverStatus.className = 'server-status error';
@@ -133,16 +296,45 @@
             let html = '';
             for (const result of results.values()) {
                 const statusClass = result.status === 'pinging' ? 'pinging' : `status-${result.status}`;
+                const statusText = result.status === 'pinging' ? 'Testing' : 
+                                 result.status === 'success' ? '✓ Success' : 
+                                 '✗ Failed';
+                
+                // Determine response time class
+                let responseTimeClass = '';
+                if (result.response_time > 0) {
+                    if (result.response_time < 2000) {
+                        responseTimeClass = 'fast';
+                    } else if (result.response_time < 5000) {
+                        responseTimeClass = 'medium';
+                    } else {
+                        responseTimeClass = 'slow';
+                    }
+                }
+                
                 html += `
                     <tr>
-                        <td>${result.name}</td>
-                        <td class="${statusClass}">${result.status}</td>
-                        <td>${result.response_time}ms</td>
-                        <td>${result.response}</td>
+                        <td><strong>${result.name}</strong></td>
+                        <td class="${statusClass}">${statusText}</td>
+                        <td><span class="response-time ${responseTimeClass}">${result.response_time > 0 ? result.response_time + 'ms' : '-'}</span></td>
+                        <td class="response-cell" title="${result.response}">${result.response || '-'}</td>
                     </tr>
                 `;
             }
             resultsTable.innerHTML = html;
+        }
+
+        function updateSummary() {
+            totalModelsEl.textContent = results.size;
+            successCountEl.textContent = successCount;
+            errorCountEl.textContent = errorCount;
+            
+            if (successCount > 0) {
+                const avgTime = Math.round(totalResponseTime / successCount);
+                avgResponseTimeEl.textContent = avgTime + 'ms';
+            } else {
+                avgResponseTimeEl.textContent = '-';
+            }
         }
     </script>
 </body>
