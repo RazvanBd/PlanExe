@@ -1,6 +1,6 @@
 # PlanExe
 
-**What does PlanExe do:** Turn your idea into a comprehensive plan in minutes, not months.
+**What does PlanExe do:** Turn your idea into a comprehensive plan in minutes, not months. Now includes automatic generation of technical task lists for developers!
 
 - An business plan for a [Minecraft-themed escape room](https://neoneye.github.io/PlanExe-web/20251016_minecraft_escape_report.html).
 - An business plan for a [Faraday cage manufacturing company](https://neoneye.github.io/PlanExe-web/20250720_faraday_enclosure_report.html).
@@ -59,6 +59,24 @@ PlanExe comes with a Gradio-based web interface. To start the local web server:
 This command launches a server at http://localhost:7860. Open that link in your browser, type a vague idea or description, and PlanExe will produce a detailed plan.
 
 To stop the server at any time, press `Ctrl+C` in your terminal.
+
+## Technical Task Lists
+
+PlanExe now automatically generates language and framework-agnostic technical task lists! When you run the planner, it creates a detailed list of development tasks that developers can follow step-by-step to build the application.
+
+Each task includes:
+- **Title** and detailed **description**
+- **Acceptance criteria** for testing completion
+- **Examples** showing expected behavior
+- **Dependencies** for proper task ordering
+- **Effort estimates** and **priority levels**
+- **Implementation notes** and considerations
+
+Tasks are generated in the pipeline output as:
+- `029-1-technical_tasks_raw.json` - JSON format
+- `029-2-technical_tasks.md` - Human-readable markdown
+
+For more details, see [`planexe/technical_tasks/README.md`](planexe/technical_tasks/README.md).
 
 </details>
 
