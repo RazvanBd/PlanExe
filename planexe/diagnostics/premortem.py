@@ -373,8 +373,6 @@ if __name__ == "__main__":
     model_names = [
         "ollama-llama3.1",
         # "openrouter-paid-gemini-2.0-flash-001",
-        # "openrouter-paid-openai-gpt-oss-20b",
-        # "openrouter-paid-openai-gpt-4o-mini",
         # "openrouter-paid-qwen3-30b-a3b",
     ]
     llm_models = LLMModelFromName.from_names(model_names)

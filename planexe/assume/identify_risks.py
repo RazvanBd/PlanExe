@@ -3,7 +3,6 @@ Identify risks in the project plan.
 
 As of 2025-03-03, the result is sensitive to what LLM is being used.
 - Good `openrouter-paid-gemini-2.0-flash-001`.
-- Medium `openrouter-paid-openai-gpt-4o-mini`.
 - Bad `ollama-llama3.1`.
 
 IDEA: assign uuid's to each risk. So later stages of the plan can refer to the risks by their uuid's.
