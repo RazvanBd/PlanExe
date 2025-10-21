@@ -42,7 +42,7 @@ source venv/bin/activate
 
 # Configuration
 
-**Config A:** Run a model in the cloud using a paid provider. Follow the instructions in [OpenRouter](extra/openrouter.md).
+**Config A:** Run a model in the cloud using a paid provider. Follow the instructions in [OpenRouter](extra/openrouter.md), [Gemini](extra/gemini.md), or [Mistral](extra/mistral.md).
 
 **Config B:** Run models locally on a high-end computer. Follow the instructions for either [Ollama](extra/ollama.md) or [LM Studio](extra/lm_studio.md).
 
