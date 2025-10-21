@@ -16,7 +16,7 @@ import logging
 import json
 from dataclasses import dataclass
 from math import ceil
-from planexe.llm_factory import LLMInfo, OllamaStatus
+from planexe.llm_factory import LLMInfo
 from planexe.plan.generate_run_id import generate_run_id, RUN_ID_PREFIX
 from planexe.plan.create_zip_archive import create_zip_archive
 from planexe.plan.filenames import FilenameEnum
@@ -49,8 +49,8 @@ class Config:
     visible_top_header: bool
     visible_open_output_dir_button: bool
     visible_llm_info: bool
-    visible_openrouter_api_key_textbox: bool
-    allow_only_openrouter_models: bool
+    visible_gemini_api_key_textbox: bool
+    allow_only_gemini_models: bool
     run_planner_check_api_key_is_provided: bool
     enable_purge_old_runs: bool
     browser_state_secret: str
@@ -59,9 +59,9 @@ CONFIG_LOCAL = Config(
     use_uuid_as_run_id=False,
     visible_top_header=True,
     visible_open_output_dir_button=True,
-    visible_openrouter_api_key_textbox=False,
+    visible_gemini_api_key_textbox=False,
     visible_llm_info=True,
-    allow_only_openrouter_models=False,
+    allow_only_gemini_models=False,
     run_planner_check_api_key_is_provided=False,
     enable_purge_old_runs=False,
     browser_state_secret="insert-your-secret-here",
@@ -70,9 +70,9 @@ CONFIG_HUGGINGFACE_SPACES = Config(
     use_uuid_as_run_id=True,
     visible_top_header=False,
     visible_open_output_dir_button=False,
-    visible_openrouter_api_key_textbox=True,
+    visible_gemini_api_key_textbox=True,
     visible_llm_info=False,
-    allow_only_openrouter_models=True,
+    allow_only_gemini_models=True,
     run_planner_check_api_key_is_provided=True,
     enable_purge_old_runs=True,
     browser_state_secret=huggingface_spaces_browserstate_secret(),
@@ -109,14 +109,12 @@ for prompt_item in all_prompts:
     gradio_examples.append([prompt_item.prompt])
 
 llm_info = LLMInfo.obtain_info()
-logger.info(f"LLMInfo.ollama_status: {llm_info.ollama_status.value}")
 logger.info(f"LLMInfo.error_message_list: {llm_info.error_message_list}")
 
 trimmed_llm_config_items = []
-if CONFIG.allow_only_openrouter_models:
-    # On Hugging Face Spaces, show only openrouter models.
-    # Since it's not possible to run Ollama nor LM Studio.
-    trimmed_llm_config_items = [item for item in llm_info.llm_config_items if item.id.startswith("openrouter")]
+if CONFIG.allow_only_gemini_models:
+    # On Hugging Face Spaces, show only gemini models.
+    trimmed_llm_config_items = [item for item in llm_info.llm_config_items if item.id.startswith("gemini")]
 else:
     trimmed_llm_config_items = llm_info.llm_config_items
 
@@ -175,7 +173,7 @@ class SessionState:
     """
     def __init__(self):
         # Settings: the user's OpenRouter API key.
-        self.openrouter_api_key = "" # Initialize to empty string
+        self.gemini_api_key = "" # Initialize to empty string
         # Settings: The model that the user has picked.
         self.llm_model = default_model_value
         # Settings: The speedvsdetail that the user has picked.
@@ -202,7 +200,7 @@ def initialize_browser_settings(browser_state, session_state: SessionState):
         settings = json.loads(browser_state) if browser_state else {}
     except Exception:
         settings = {}
-    openrouter_api_key = settings.get("openrouter_api_key_text", "")
+    gemini_api_key = settings.get("gemini_api_key_text", "")
     model = settings.get("model_radio", default_model_value)
     speedvsdetail = settings.get("speedvsdetail_radio", SpeedVsDetailEnum.ALL_DETAILS_BUT_SLOW)
 
@@ -212,24 +210,24 @@ def initialize_browser_settings(browser_state, session_state: SessionState):
         logger.info(f"initialize_browser_settings: model '{model}' is not in available_model_names. Setting to default_model_value: {default_model_value}")
         model = default_model_value
 
-    session_state.openrouter_api_key = openrouter_api_key
+    session_state.gemini_api_key = gemini_api_key
     session_state.llm_model = model
     session_state.speedvsdetail = speedvsdetail
-    return openrouter_api_key, model, speedvsdetail, browser_state, session_state
+    return gemini_api_key, model, speedvsdetail, browser_state, session_state
 
-def update_browser_settings_callback(openrouter_api_key, model, speedvsdetail, browser_state, session_state: SessionState):
+def update_browser_settings_callback(gemini_api_key, model, speedvsdetail, browser_state, session_state: SessionState):
     try:
         settings = json.loads(browser_state) if browser_state else {}
     except Exception:
         settings = {}
-    settings["openrouter_api_key_text"] = openrouter_api_key
+    settings["gemini_api_key_text"] = gemini_api_key
     settings["model_radio"] = model
     settings["speedvsdetail_radio"] = speedvsdetail
     updated_browser_state = json.dumps(settings)
-    session_state.openrouter_api_key = openrouter_api_key
+    session_state.gemini_api_key = gemini_api_key
     session_state.llm_model = model
     session_state.speedvsdetail = speedvsdetail
-    return updated_browser_state, openrouter_api_key, model, speedvsdetail, session_state
+    return updated_browser_state, gemini_api_key, model, speedvsdetail, session_state
 
 def run_planner(submit_or_retry_button, plan_prompt, browser_state, session_state: SessionState):
     """
@@ -242,13 +240,13 @@ def run_planner(submit_or_retry_button, plan_prompt, browser_state, session_stat
         settings = json.loads(browser_state) if browser_state else {}
     except Exception:
         settings = {}
-    session_state.openrouter_api_key = settings.get("openrouter_api_key_text", session_state.openrouter_api_key)
+    session_state.gemini_api_key = settings.get("gemini_api_key_text", session_state.gemini_api_key)
     session_state.llm_model = settings.get("model_radio", session_state.llm_model)
     session_state.speedvsdetail = settings.get("speedvsdetail_radio", session_state.speedvsdetail)
 
     # Check if an OpenRouter API key is required and provided.
     if CONFIG.run_planner_check_api_key_is_provided:
-        if session_state.openrouter_api_key is None or len(session_state.openrouter_api_key) == 0:
+        if session_state.gemini_api_key is None or len(session_state.gemini_api_key) == 0:
             raise ValueError("An OpenRouter API key is required to use PlanExe. Please provide an API key in the Settings tab.")
 
     # Clear any previous stop signal.
@@ -303,12 +301,12 @@ def run_planner(submit_or_retry_button, plan_prompt, browser_state, session_stat
     env[PipelineEnvironmentEnum.LLM_MODEL.value] = session_state.llm_model
     env[PipelineEnvironmentEnum.SPEED_VS_DETAIL.value] = speedvsdetail_string
 
-    # If there is a non-empty OpenRouter API key, set it as an environment variable.
-    if session_state.openrouter_api_key and len(session_state.openrouter_api_key) > 0:
-        print("Setting OpenRouter API key as environment variable.")
-        env["OPENROUTER_API_KEY"] = session_state.openrouter_api_key
+    # If there is a non-empty Gemini API key, set it as an environment variable.
+    if session_state.gemini_api_key and len(session_state.gemini_api_key) > 0:
+        print("Setting Gemini API key as environment variable.")
+        env["GEMINI_API_KEY"] = session_state.gemini_api_key
     else:
-        print("No OpenRouter API key provided.")
+        print("No Gemini API key provided.")
 
     start_time = time.perf_counter()
     # Initialize the last zip creation time to be ZIP_INTERVAL_SECONDS in the past
@@ -459,8 +457,8 @@ def open_output_dir(session_state: SessionState):
 
 def check_api_key(session_state: SessionState):
     """Checks if the API key is provided and returns a warning if not."""
-    if CONFIG.visible_openrouter_api_key_textbox and (not session_state.openrouter_api_key or len(session_state.openrouter_api_key) == 0):
-        return "<div style='background-color: #FF7777; color: black; border: 1px solid red; padding: 10px;'>Welcome to PlanExe. Please provide an OpenRouter API key in the <b>Settings</b> tab to start using PlanExe.</div>"
+    if CONFIG.visible_gemini_api_key_textbox and (not session_state.gemini_api_key or len(session_state.gemini_api_key) == 0):
+        return "<div style='background-color: #FF7777; color: black; border: 1px solid red; padding: 10px;'>Welcome to PlanExe. Please provide a Gemini API key in the <b>Settings</b> tab to start using PlanExe.</div>"
     return "" # No warning
 
 # Build the Gradio UI using Blocks.
@@ -494,11 +492,6 @@ with gr.Blocks(title="PlanExe") as demo_text2plan:
 
     with gr.Tab("Settings"):
         if CONFIG.visible_llm_info:
-            if llm_info.ollama_status == OllamaStatus.ollama_not_running:
-                gr.Markdown("**Ollama is not running**, so Ollama models are unavailable. Please start Ollama to use them.")
-            elif llm_info.ollama_status == OllamaStatus.mixed:
-                gr.Markdown("**Mixed. Some Ollama models are running, but some are NOT running.**, You may have to start the ones that aren't running.")
-
             if len(llm_info.error_message_list) > 0:
                 gr.Markdown("**Error messages:**")
                 for error_message in llm_info.error_message_list:
@@ -521,12 +514,12 @@ with gr.Blocks(title="PlanExe") as demo_text2plan:
             label="Speed vs Detail",
             interactive=True 
         )
-        openrouter_api_key_text = gr.Textbox(
-            label="OpenRouter API Key",
+        gemini_api_key_text = gr.Textbox(
+            label="Gemini API Key",
             type="password",
-            placeholder="Enter your OpenRouter API key (required)",
-            info="Sign up at [OpenRouter](https://openrouter.ai/) to get an API key. A small top-up (e.g. 5 USD) is needed to access paid models.",
-            visible=CONFIG.visible_openrouter_api_key_textbox
+            placeholder="Enter your Gemini API key (required)",
+            info="Sign up at [Google AI Studio](https://aistudio.google.com/app/apikey) to get an API key.",
+            visible=CONFIG.visible_gemini_api_key_textbox
         )
 
     with gr.Tab("Join the community"):
@@ -576,10 +569,10 @@ with gr.Blocks(title="PlanExe") as demo_text2plan:
     )
 
     # Unified change callbacks for settings.
-    openrouter_api_key_text.change(
+    gemini_api_key_text.change(
         fn=update_browser_settings_callback,
-        inputs=[openrouter_api_key_text, model_radio, speedvsdetail_radio, browser_state, session_state],
-        outputs=[browser_state, openrouter_api_key_text, model_radio, speedvsdetail_radio, session_state]
+        inputs=[gemini_api_key_text, model_radio, speedvsdetail_radio, browser_state, session_state],
+        outputs=[browser_state, gemini_api_key_text, model_radio, speedvsdetail_radio, session_state]
     ).then(
         fn=check_api_key,
         inputs=[session_state],
@@ -588,8 +581,8 @@ with gr.Blocks(title="PlanExe") as demo_text2plan:
 
     model_radio.change(
         fn=update_browser_settings_callback,
-        inputs=[openrouter_api_key_text, model_radio, speedvsdetail_radio, browser_state, session_state],
-        outputs=[browser_state, openrouter_api_key_text, model_radio, speedvsdetail_radio, session_state]
+        inputs=[gemini_api_key_text, model_radio, speedvsdetail_radio, browser_state, session_state],
+        outputs=[browser_state, gemini_api_key_text, model_radio, speedvsdetail_radio, session_state]
     ).then(
         fn=check_api_key,
         inputs=[session_state],
@@ -598,8 +591,8 @@ with gr.Blocks(title="PlanExe") as demo_text2plan:
 
     speedvsdetail_radio.change(
         fn=update_browser_settings_callback,
-        inputs=[openrouter_api_key_text, model_radio, speedvsdetail_radio, browser_state, session_state],
-        outputs=[browser_state, openrouter_api_key_text, model_radio, speedvsdetail_radio, session_state]
+        inputs=[gemini_api_key_text, model_radio, speedvsdetail_radio, browser_state, session_state],
+        outputs=[browser_state, gemini_api_key_text, model_radio, speedvsdetail_radio, session_state]
     ).then(
         fn=check_api_key,
         inputs=[session_state],
@@ -610,7 +603,7 @@ with gr.Blocks(title="PlanExe") as demo_text2plan:
     demo_text2plan.load(
         fn=initialize_browser_settings,
         inputs=[browser_state, session_state],
-        outputs=[openrouter_api_key_text, model_radio, speedvsdetail_radio, browser_state, session_state]
+        outputs=[gemini_api_key_text, model_radio, speedvsdetail_radio, browser_state, session_state]
     ).then(
         fn=check_api_key,
         inputs=[session_state],

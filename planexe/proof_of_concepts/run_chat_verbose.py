@@ -14,7 +14,7 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 llama_index.core.set_global_handler("simple")
 
-llm = get_llm("ollama-llama3.1")
+llm = get_llm("gemini-paid-flash-2.0")
 # llm = get_llm("deepseek-chat")
 
 messages = [

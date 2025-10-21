@@ -191,7 +191,7 @@ if __name__ == "__main__":
     system_prompt = ExpertCriticism.format_system(expert)
     query = ExpertCriticism.format_query("SWOT Analysis", swot_markdown)
 
-    llm = get_llm("ollama-llama3.1")
+    llm = get_llm("gemini-paid-flash-2.0")
     # llm = get_llm("deepseek-chat")
 
     print(f"System: {system_prompt}")

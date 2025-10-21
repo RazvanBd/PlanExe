@@ -490,7 +490,7 @@ if __name__ == "__main__":
         ]
     )
 
-    llm = get_llm("ollama-llama3.1")
+    llm = get_llm("gemini-paid-flash-2.0")
 
     plan_prompt = find_plan_prompt("4060d2de-8fcc-4f8f-be0c-fdae95c7ab4f")
     query = (

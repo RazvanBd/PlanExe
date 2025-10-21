@@ -149,7 +149,7 @@ class EnrichTeamMembersWithEnvironmentInfo:
 if __name__ == "__main__":
     from planexe.llm_factory import get_llm
 
-    llm = get_llm("ollama-llama3.1")
+    llm = get_llm("gemini-paid-flash-2.0")
     # llm = get_llm("deepseek-chat")
 
     job_description = "Establish a new police station in a high crime area."

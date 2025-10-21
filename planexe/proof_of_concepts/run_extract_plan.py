@@ -23,7 +23,7 @@ class DocumentDetails(BaseModel):
         description="What has been accomplished when the plan has been successfully executed, max 50 words."
     )
 
-llm = get_llm("ollama-llama3.1")
+llm = get_llm("gemini-paid-flash-2.0")
 sllm = llm.as_structured_llm(DocumentDetails)
 
 text = """

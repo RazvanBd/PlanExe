@@ -154,7 +154,7 @@ class ReviewTeam:
 if __name__ == "__main__":
     from planexe.llm_factory import get_llm
 
-    llm = get_llm("ollama-llama3.1")
+    llm = get_llm("gemini-paid-flash-2.0")
 
     path = os.path.join(os.path.dirname(__file__), 'test_data', "solarfarm_team_without_review.md")
     with open(path, 'r', encoding='utf-8') as f:

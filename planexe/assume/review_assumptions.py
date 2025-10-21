@@ -219,7 +219,7 @@ if __name__ == "__main__":
     from planexe.llm_factory import get_llm
     from planexe.utils.concat_files_into_string import concat_files_into_string
 
-    llm = get_llm("ollama-llama3.1")
+    llm = get_llm("gemini-paid-flash-2.0")
 
     base_path = os.path.join(os.path.dirname(__file__), 'test_data', 'review_assumptions1')
 

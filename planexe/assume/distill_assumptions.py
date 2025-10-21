@@ -3,7 +3,7 @@ From a list of verbose assumptions, distill the key assumptions, so it can fit w
 
 IDEA: Sometimes the input file has lots of assumptions, but the distilled has none or a few. Important assumptions are getting lost.
 This problem occur with this LLM:
-"openrouter-paid-gemini-2.0-flash-001"
+"gemini-paid-flash-2.0"
 The llama3.1 has no problems with it.
 
 IDEA: Sometimes it recognizes that the project starts ASAP as an assumption. This is already part of the project description, this is not something new.
@@ -270,7 +270,7 @@ if __name__ == "__main__":
         f"assumption.json:\n{assumptions_raw_data}"
     )
 
-    llm = get_llm("ollama-llama3.1")
+    llm = get_llm("gemini-paid-flash-2.0")
     # llm = get_llm("deepseek-chat", max_tokens=8192)
 
     print(f"Query: {query}")

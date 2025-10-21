@@ -13,8 +13,7 @@ from planexe.team.review_team import ReviewTeam
 from planexe.plan.find_plan_prompt import find_plan_prompt
 from planexe.llm_factory import get_llm
 
-llm = get_llm("ollama-llama3.1")
-# llm = get_llm("openrouter-paid-gemini-2.0-flash-001")
+llm = get_llm("gemini-paid-flash-2.0")
 
 plan_prompt = find_plan_prompt("4dc34d55-0d0d-4e9d-92f4-23765f49dd29")
 

@@ -1,19 +1,13 @@
 # Using PlanExe with Google Gemini API
 
-This is for **advanced users** that already have PlanExe working.
+Google Gemini offers direct API access with competitive pricing and high performance.
 
-If you are getting started with PlanExe, I (the developer of PlanExe) recommend following the [openrouter.md](openrouter.md) instructions. Stick with the default settings.
-
-If you want to use Gemini directly via Google's API (instead of through OpenRouter), follow this guide.
-
-## Why use Gemini directly?
-
-Google Gemini offers direct API access with competitive pricing and high performance:
+## Why use Gemini?
 
 - **Fast response times**: Gemini 2.0 Flash is optimized for speed
 - **Large context windows**: Up to 1-2M tokens depending on the model
 - **Competitive pricing**: Starting at $0.075/M input tokens for Gemini 2.0 Flash
-- **Direct integration**: Connect directly to Google's API without intermediaries
+- **Direct integration**: Connect directly to Google's API
 
 ## Configuration
 
@@ -123,17 +117,3 @@ Report your issue on [Discord](https://neoneye.github.io/PlanExe-web/discord). P
 - Your system info (OS, hardware)
 - The error message from `log.txt`
 - The model you're trying to use
-
-## Comparison with OpenRouter
-
-**Use Gemini directly if:**
-- You prefer direct integration with Google's API
-- You want the latest Gemini models as soon as they're released
-- You're already using Google Cloud Platform
-
-**Use OpenRouter if:**
-- You want access to multiple LLM providers through one API
-- You want automatic fallback between different models
-- You prefer consolidated billing across different providers
-
-Both approaches work well with PlanExe. Choose based on your specific needs.

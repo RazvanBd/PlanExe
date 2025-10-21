@@ -169,7 +169,7 @@ if __name__ == "__main__":
     import json
 
     llm = get_llm("ollama-llama3.1", temperature=0.0)
-    # llm = get_llm("openrouter-paid-gemini-2.0-flash-001")
+    # llm = get_llm("gemini-paid-flash-2.0")
 
     prompt_catalog = PromptCatalog()
     prompt_catalog.load_example_swot_prompts()

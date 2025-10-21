@@ -204,8 +204,6 @@ Please provide exactly one cost estimate for each of the following {task_id_coun
         return d
 
 if __name__ == "__main__":
-    from llama_index.llms.ollama import Ollama
-    from llama_index.llms.openai_like import OpenAILike
     from dotenv import dotenv_values
     import os
     from wbs_table_for_cost_estimation.wbs_table_for_cost_estimation import WBSTableForCostEstimation

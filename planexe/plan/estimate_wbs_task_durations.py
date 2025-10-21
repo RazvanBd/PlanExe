@@ -137,7 +137,6 @@ Only estimate these {len(task_ids)} tasks:
         return d
 
 if __name__ == "__main__":
-    from llama_index.llms.ollama import Ollama
 
     # TODO: Eliminate hardcoded paths
     basepath = '/Users/neoneye/Desktop/planexe_data'

@@ -99,7 +99,7 @@ if __name__ == "__main__":
         summary: str = Field(description="What is this about.")
 
 
-    llm = get_llm("ollama-llama3.1")
+    llm = get_llm("gemini-paid-flash-2.0")
 
     messages = [
         ChatMessage(

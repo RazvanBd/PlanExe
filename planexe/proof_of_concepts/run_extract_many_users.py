@@ -20,7 +20,7 @@ class DocumentDetails(BaseModel):
         description="List of all URLs appearing in this document"
     )
 
-llm = get_llm("ollama-llama3.1")
+llm = get_llm("gemini-paid-flash-2.0")
 sllm = llm.as_structured_llm(DocumentDetails)
 
 text = """

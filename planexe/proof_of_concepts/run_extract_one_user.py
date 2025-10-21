@@ -9,8 +9,8 @@ class User(BaseModel):
     id: int
     name: str = "Jane Doe"
 
-llm = get_llm("ollama-llama3.1")
-# llm = get_llm("openrouter-paid-gemini-2.0-flash-001")
+llm = get_llm("gemini-paid-flash-2.0")
+# llm = get_llm("gemini-paid-flash-2.0")
 sllm = llm.as_structured_llm(User)
 
 text = "location=unspecified, user id=42, role=agent, name=Simon, age=30"

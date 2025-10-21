@@ -121,7 +121,6 @@ WBS Level 2:
         return d
 
 if __name__ == "__main__":
-    from llama_index.llms.ollama import Ollama
 
     basepath = os.path.join(os.path.dirname(__file__), 'test_data')
 

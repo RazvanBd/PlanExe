@@ -123,8 +123,8 @@ if __name__ == "__main__":
 
     llm_models_names = [
         "ollama-llama3.1",
-        "openrouter-paid-gemini-2.0-flash-001",
-        "openrouter-paid-qwen3-30b-a3b"
+        "gemini-paid-flash-2.0",
+        "gemini-paid-pro-2.0"
     ]
     llm_models = LLMModelFromName.from_names(llm_models_names)
     llm_executor = LLMExecutor(llm_models=llm_models)

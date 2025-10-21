@@ -354,7 +354,7 @@ if __name__ == "__main__":
         "Project start ASAP"
     )
 
-    llm = get_llm("ollama-llama3.1")
+    llm = get_llm("gemini-paid-flash-2.0")
     # llm = get_llm("deepseek-chat", max_tokens=8192)
 
     print(f"Query: {query}")

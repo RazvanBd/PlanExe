@@ -119,11 +119,7 @@ if __name__ == "__main__":
         raise ValueError("Prompt item not found.")
     query = prompt_item.prompt
 
-    llm = get_llm("ollama-llama3.1") # works
-    # llm = get_llm("openrouter-paid-gemini-2.0-flash-001") # works
-    # llm = get_llm("ollama-qwen")
-    # llm = get_llm("ollama-phi")
-    # llm = get_llm("deepseek-chat")
+    llm = get_llm("gemini-paid-flash-2.0") # works
 
     print(f"System: {system_prompt}")
     print(f"\n\nQuery: {query}")

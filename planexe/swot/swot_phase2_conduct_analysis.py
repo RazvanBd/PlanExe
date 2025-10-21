@@ -258,7 +258,7 @@ if __name__ == "__main__":
         raise ValueError("Prompt item not found.")
     user_prompt = prompt_item.prompt
     
-    llm = get_llm("ollama-llama3.1")
+    llm = get_llm("gemini-paid-flash-2.0")
 
     json_response = swot_phase2_conduct_analysis(llm, user_prompt, system_prompt.strip())
     print(json.dumps(json_response, indent=2))
