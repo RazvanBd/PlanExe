@@ -26,19 +26,20 @@ You can generate 1 plan for free.
 
 <br>
 
-**Prerequisite:** You are a python developer with machine learning experience.
+**Prerequisite:** Python 3.10 or higher
 
-# Installation
-
-Typical python installation procedure:
+# Quick Installation
 
 ```bash
 git clone https://github.com/neoneye/PlanExe.git
 cd PlanExe
 python3 -m venv venv
 source venv/bin/activate
-(venv) pip install '.[gradio-ui]'
+pip install --upgrade pip
+pip install '.[gradio-ui]'
 ```
+
+**For detailed installation instructions, troubleshooting, and more options, see [INSTALL.md](INSTALL.md)**
 
 # Configuration
 
@@ -51,7 +52,7 @@ Recommendation: I recommend using **Gemini** as it offers the most straightforwa
 PlanExe comes with a Gradio-based web interface. To start the local web server:
 
 ```bash
-(venv) python -m planexe.plan.app_text2plan
+python -m planexe.plan.app_text2plan
 ```
 
 This command launches a server at http://localhost:7860. Open that link in your browser, type a vague idea or description, and PlanExe will produce a detailed plan.
