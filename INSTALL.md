@@ -123,7 +123,21 @@ python3 -m venv venv --clear
 
 ## Verification
 
-To verify your installation:
+### Quick Verification
+
+Run the included verification script to check your installation:
+
+```bash
+python verify_installation.py
+```
+
+This will check:
+- Python version compatibility
+- Pillow version and compatibility
+- All required dependencies
+- PlanExe installation
+
+### Manual Verification
 
 1. Check that PlanExe is installed:
    ```bash
