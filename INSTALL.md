@@ -93,8 +93,11 @@ Press `Ctrl+C` in your terminal to stop the server.
 
 ### Dependency Conflicts
 
-The installation should now work without conflicts. The pillow dependency has been configured to work with all required packages:
+The installation should now work without conflicts. The dependencies have been configured to work with all required packages:
 - `pillow>=10.2.0,<11.0` - Compatible with llama-index-llms-gemini, gradio, and llama-index-core
+- `pydantic>=2.11.5,<3.0.0` - Compatible with llama-index-workflows, llama-index-core, fastapi, gradio, and banks
+
+If you still encounter dependency conflicts, see [DEPENDENCY_FIX.md](DEPENDENCY_FIX.md) for detailed information.
 
 ### Python Version Issues
 
