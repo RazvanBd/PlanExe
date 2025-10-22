@@ -58,6 +58,36 @@ def check_pillow_version():
         print("  ❌ FAIL: Pillow is not installed")
         return False
 
+def check_pydantic_version():
+    """Check Pydantic version and compatibility."""
+    print("\nChecking Pydantic installation...")
+    try:
+        import pydantic
+        from pydantic import __version__ as pydantic_version
+        print(f"  Pydantic version: {pydantic_version}")
+        
+        # Parse version
+        major, minor = map(int, pydantic_version.split('.')[:2])
+        
+        # Check if version is in the acceptable range (>=2.11.5,<3.0.0)
+        if major == 2 and minor >= 11 and (minor > 11 or int(pydantic_version.split('.')[2]) >= 5):
+            print(f"  ✅ PASS: Pydantic {pydantic_version} is in the compatible range (>=2.11.5,<3.0.0)")
+            return True
+        elif major == 2 and minor < 11:
+            print(f"  ❌ FAIL: Pydantic {pydantic_version} is too old (should be >=2.11.5)")
+            print("     This will conflict with llama-index-workflows")
+            return False
+        elif major >= 3:
+            print(f"  ❌ FAIL: Pydantic {pydantic_version} is too new (should be <3.0.0)")
+            print("     This may cause compatibility issues")
+            return False
+        else:
+            print(f"  ⚠️  WARNING: Unexpected Pydantic version {pydantic_version}")
+            return True
+    except ImportError:
+        print("  ❌ FAIL: Pydantic is not installed")
+        return False
+
 def check_core_dependencies():
     """Check if core dependencies are installed."""
     print("\nChecking core dependencies...")
@@ -109,6 +139,7 @@ def main():
     
     checks = [
         check_python_version(),
+        check_pydantic_version(),
         check_pillow_version(),
         check_core_dependencies(),
         check_planexe_import(),
